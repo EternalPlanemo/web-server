@@ -1,7 +1,7 @@
 QT -= gui
 QT += network websockets
 
-CONFIG += c++20 console
+CONFIG += c++17 console
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -9,7 +9,10 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        serversocket.cpp \
+        socket.cpp \
+        tcpsocket.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -17,5 +20,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    dependencies.h \
     runnable.h \
-    server.h
+    server.h \
+    serversocket.h \
+    socket.h \
+    tcpsocket.h
