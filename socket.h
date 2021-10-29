@@ -9,6 +9,7 @@ class Socket
 {
 public:
     Socket(int domain, int service, int protocol, int port, ulong interface);
+    virtual ~Socket();
     virtual int establish(int sock, struct sockaddr_in address) = 0;
 
     auto get_sock() -> int;

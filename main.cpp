@@ -1,13 +1,15 @@
-#include "dependencies.h"
 #include <iostream>
+
+#include <server.h>
+#include <serversocket.h>
 
 auto main() -> int
 {
-    try {
-        auto* sock = new ServerSocket(3000, INADDR_ANY);
-    }  catch (std::exception& e) {
-        std::cerr << e.what() << '\n';
-    }
+    // const Server<ServerSocket>* server = new Server<ServerSocket>(3000);
+    //server->run();
+
+    auto s = new Server<ServerSocket>(3000);
+    s->run();
 
     return 0;
 }

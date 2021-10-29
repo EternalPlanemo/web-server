@@ -1,6 +1,7 @@
 #include "socket.h"
 
 #include <stdexcept>
+#include <unistd.h>
 
 Socket::Socket(
         int domain,
@@ -29,4 +30,9 @@ auto Socket::get_sock() -> int
 auto Socket::get_address() -> sockaddr_in
 {
     return address;
+}
+
+Socket::~Socket()
+{
+    close(sock);
 }
