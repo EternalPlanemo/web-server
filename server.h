@@ -26,7 +26,7 @@ public:
 
 private:
     int buffer_size;
-    const char* buffer;
+    char* buffer;
     std::unique_ptr<Socket> socket;
 };
 
@@ -46,22 +46,18 @@ void Server<SocketT>::run()
     int accepted_con = -1;
     sockaddr_in addr;
     socklen_t addrlen;
+    long valread;
 
     const char* pong = "Message received!";
 
-    while (true) {
-        printf("\n+++++++ Waiting for new connection ++++++++\n\n");
-        if ((accepted_con = accept(socket->get_sock(), (sockaddr *)&addr, (socklen_t*)&addrlen)) < 0)
-        {
-            std::cerr << "Failed establishing a connection with " << addr.sin_addr.s_addr << ':' << addr.sin_port << '\n';
+    while(true) {
+        if ((accepted_con = accept(socket->get_sock(), (struct sockaddr *)&addr, (socklen_t*)&addrlen))<0) {
+            throw new std::runtime_error("Failed to establish connection.");
         }
 
-        memset(&buffer, '\0', buffer_size);
 
-        read(accepted_con , &buffer, buffer_size);
-
-        std::cout << "Message:\n" << buffer << '\n';
-
+        valread = read(accepted_con, buffer, buffer_size);
+        printf("%s\n",buffer );
         write(accepted_con , pong , strlen(pong));
         printf("------------------Hello message sent-------------------\n");
         close(accepted_con);
