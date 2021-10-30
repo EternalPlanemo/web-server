@@ -14,7 +14,7 @@
 #include <chrono>
 #include <curlpp/Easy.hpp>
 
-#include "socket.h"
+#include "Socket.h"
 
 template <typename SocketT>
 class Server
@@ -73,5 +73,5 @@ void Server<SocketT>::run()
     }
 }
 
-#endif // SERVER_HQt/B$D#42@lin
+#endif // SERVER_H
 

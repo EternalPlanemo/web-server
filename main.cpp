@@ -1,8 +1,8 @@
 #include <string.h>
 #include <memory>
 
-#include "server.h"
-#include "serversocket.h"
+#include "Server.h"
+#include "ServerSocket.h"
 
 auto main(int argc, const char* argv[]) -> int
 {

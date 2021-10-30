@@ -1,7 +1,7 @@
 #ifndef TCPSOCKET_H
 #define TCPSOCKET_H
 
-#include "socket.h"
+#include "Socket.h"
 
 class TcpSocket : public Socket
 {

@@ -1,7 +1,7 @@
 QT -= gui
 QT += network websockets
 
-CONFIG += c++17 console pthread
+CONFIG += c++20 console pthread
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -9,17 +9,18 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
-    server.h \
-    serversocket.h \
-    socket.h \
-    tcpsocket.h
+    HttpResponse.h \
+    Server.h \
+    ServerSocket.h \
+    Socket.h \
+    TcpSocket.h
 
 
 SOURCES += \
-        main.cpp \
-        serversocket.cpp \
-        socket.cpp \
-        tcpsocket.cpp
+        ServerSocket.cpp \
+        Socket.cpp \
+        TcpSocket.cpp \
+        main.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
