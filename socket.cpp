@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <unistd.h>
+#include <cstring>
 
 Socket::Socket(
         int domain,
@@ -15,11 +16,18 @@ Socket::Socket(
     address.sin_port = htons(port);
     address.sin_addr.s_addr = htonl(interface);
 
+    memset(address.sin_zero, '\0', sizeof (address.sin_zero));
+
     sock = socket(domain, service, protocol);
 
     if (sock < 0) {
         throw new std::runtime_error("Socket initialization failed.");
     }
+}
+
+Socket::~Socket()
+{
+    close(sock);
 }
 
 auto Socket::get_sock() -> int
@@ -32,7 +40,7 @@ auto Socket::get_address() -> sockaddr_in
     return address;
 }
 
-Socket::~Socket()
+auto Socket::size() const -> int
 {
-    close(sock);
+    return sizeof (address);
 }

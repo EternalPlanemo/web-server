@@ -10,6 +10,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 #include "socket.h"
 
@@ -34,6 +36,8 @@ Server<SocketT>::Server(int port)
     socket = std::unique_ptr<SocketT>(new SocketT(port, INADDR_ANY));
     buffer_size = 1024;
     buffer = new char[buffer_size];
+
+    std::cout << "Listening on port " << port << '\n';
 }
 
 template <typename SocketT>
@@ -41,27 +45,26 @@ void Server<SocketT>::run()
 {
     int accepted_con = -1;
     sockaddr_in addr;
+    socklen_t addrlen;
+
+    const char* pong = "Message received!";
 
     while (true) {
-        addr = socket->get_address();
-        socklen_t addrlen = sizeof (addr);
+        printf("\n+++++++ Waiting for new connection ++++++++\n\n");
+        if ((accepted_con = accept(socket->get_sock(), (sockaddr *)&addr, (socklen_t*)&addrlen)) < 0)
+        {
+            std::cerr << "Failed establishing a connection with " << addr.sin_addr.s_addr << ':' << addr.sin_port << '\n';
+        }
 
-        accepted_con = accept(
-                    socket->get_sock(),
-                    (sockaddr*)&addr,
-                    &addrlen
-        );
+        memset(&buffer, '\0', buffer_size);
 
-        std::cout << "Connected with "
-                  << socket->get_address().sin_addr.s_addr
-                  << " on port "
-                  << socket->get_address().sin_port << '\n';
+        read(accepted_con , &buffer, buffer_size);
 
-        read(socket->get_sock(), &buffer, buffer_size);
+        std::cout << "Message:\n" << buffer << '\n';
 
-        std::cout << "Message: " << buffer << '\n';
-
-        send(accepted_con, &buffer, sizeof (buffer), 0);
+        write(accepted_con , pong , strlen(pong));
+        printf("------------------Hello message sent-------------------\n");
+        close(accepted_con);
     }
 }
 

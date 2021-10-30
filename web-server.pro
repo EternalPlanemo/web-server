@@ -1,7 +1,7 @@
 QT -= gui
 QT += network websockets
 
-CONFIG += c++17 console
+CONFIG += c++17 console pthread
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.

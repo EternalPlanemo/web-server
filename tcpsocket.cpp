@@ -7,14 +7,12 @@ TcpSocket::TcpSocket(
         ulong interface
 ) : Socket(AF_INET, SOCK_STREAM, 0, port, interface)
 {
-    connection = establish(sock, address);
-
-    if (connection < 0) {
+    if (bind(sock, (sockaddr*)&address, sizeof (address)) < 0) {
         throw new std::runtime_error("Establishing connection failed.");
     }
 }
 
-auto TcpSocket::establish(int sock, struct sockaddr_in address) -> int
+auto TcpSocket::establish(int sock, sockaddr_in address) -> int
 {
-    return bind(sock, (struct sockaddr*)&address, sizeof (address));
+    return bind(sock, (sockaddr*)&address, sizeof (address));
 }
