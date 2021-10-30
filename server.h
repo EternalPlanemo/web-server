@@ -12,6 +12,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <curlpp/Easy.hpp>
 
 #include "socket.h"
 
@@ -46,22 +47,31 @@ void Server<SocketT>::run()
     int accepted_con = -1;
     sockaddr_in addr;
     socklen_t addrlen;
-    long valread;
 
-    const char* pong = "Message received!";
+    const char* pong = "HTTP/1.1 200 OK"
+            "Server: geo/1.0.0"
+            "Date: Wed, 30 Oct 2021 10:30:07 GMT"
+            "Content-Type: text"
+            "Connection: keep-alive"
+            "Vary: Cookie"
+            "Content-Length: 2"
+            "\r\n\r\n"
+            "abc\n";
 
     while(true) {
         if ((accepted_con = accept(socket->get_sock(), (struct sockaddr *)&addr, (socklen_t*)&addrlen))<0) {
             throw new std::runtime_error("Failed to establish connection.");
         }
 
+        memset(buffer, '\0', buffer_size);
 
-        valread = read(accepted_con, buffer, buffer_size);
+        read(accepted_con, buffer, buffer_size);
         printf("%s\n",buffer );
-        write(accepted_con , pong , strlen(pong));
+        write(accepted_con, pong , strlen(pong));
         printf("------------------Hello message sent-------------------\n");
         close(accepted_con);
     }
 }
 
-#endif // SERVER_H
+#endif // SERVER_HQt/B$D#42@lin
+
