@@ -15,6 +15,8 @@
 #include <curlpp/Easy.hpp>
 
 #include "Socket.h"
+#include "ftos.h"
+#include "HttpResponse.h"
 
 template <typename SocketT>
 class Server
@@ -48,15 +50,7 @@ void Server<SocketT>::run()
     sockaddr_in addr;
     socklen_t addrlen;
 
-    const char* pong = "HTTP/1.1 200 OK"
-            "Server: geo/1.0.0"
-            "Date: Wed, 30 Oct 2021 10:30:07 GMT"
-            "Content-Type: text"
-            "Connection: keep-alive"
-            "Vary: Cookie"
-            "Content-Length: 2"
-            "\r\n\r\n"
-            "abc\n";
+    const auto response = HttpResponse(ftos("test.html")).get();
 
     while(true) {
         if ((accepted_con = accept(socket->get_sock(), (struct sockaddr *)&addr, (socklen_t*)&addrlen))<0) {
@@ -66,9 +60,11 @@ void Server<SocketT>::run()
         memset(buffer, '\0', buffer_size);
 
         read(accepted_con, buffer, buffer_size);
-        printf("%s\n",buffer );
-        write(accepted_con, pong , strlen(pong));
-        printf("------------------Hello message sent-------------------\n");
+
+        std::cout << "-- BEGIN REQUEST --\n" << buffer << "\n-- END REQUEST --\n\n";
+        std::cout << "-- BEGIN RESPONSE --\n" << response << "\n-- END RESPONSE --\n\n";
+
+        write(accepted_con, response.c_str(), response.size());
         close(accepted_con);
     }
 }

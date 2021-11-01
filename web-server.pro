@@ -13,7 +13,8 @@ HEADERS += \
     Server.h \
     ServerSocket.h \
     Socket.h \
-    TcpSocket.h
+    TcpSocket.h \
+    ftos.h
 
 
 SOURCES += \
