@@ -2,7 +2,7 @@
 #define HTTPRESPONSE_H
 
 #include <string>
-#include <fmt/format.h>
+#include <QString>
 #include <QDateTime> // JavaScript-like time format
 
 class HttpResponse
@@ -18,17 +18,16 @@ private:
 
 HttpResponse::HttpResponse(const std::string& body)
 {
-    header = fmt::format("HTTP/1.1 200 OK"
-             "Server: geo/1.0.0"
-             "Date: {}"
-             "Content-Type: text"
-             "Connection: keep-alive"
-             "Content-Length: {}",
-             QDateTime().currentDateTimeUtc().toString().toStdString().c_str(),
-             body.size()
-    );
 
-    response = header + fmt::format("\r\n\r\n{}\n", body);
+    header = QString("HTTP/1.1 200 OK\n"
+             "Server: geo/1.0.0\n"
+             "Date: %1\n"
+             "Content-Type: text\n"
+             "Connection: keep-alive\n"
+             "Content-Length: %2"
+    ).arg(QDateTime().currentDateTimeUtc().toString().toStdString().c_str(), std::to_string(body.size()).c_str()).toStdString();
+
+    response = QString("%1\r\n\r\n%2\n").arg(header.c_str(), body.c_str()).toStdString();
 }
 
 auto HttpResponse::get() -> std::string
