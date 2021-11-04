@@ -17,6 +17,8 @@
 #include "Socket.h"
 #include "ftos.h"
 #include "HttpResponse.h"
+#include "HttpRequest.h"
+#include "Router.h"
 
 template <typename SocketT>
 class Server
@@ -26,11 +28,13 @@ public:
     explicit Server(int port);
     auto run() -> void;
     auto set_buffer_size(int size) -> void;
+    auto route(std::string url, Callback callback) -> void;
 
 private:
     int buffer_size;
     char* buffer;
     std::unique_ptr<Socket> socket;
+    Router router;
 };
 
 template <typename SocketT>
@@ -44,7 +48,7 @@ Server<SocketT>::Server(int port)
 }
 
 template <typename SocketT>
-void Server<SocketT>::run()
+auto Server<SocketT>::run() -> void
 {
     int accepted_con = -1;
     sockaddr_in addr;
@@ -61,12 +65,15 @@ void Server<SocketT>::run()
 
         read(accepted_con, buffer, buffer_size);
 
-        std::cout << "-- BEGIN REQUEST --\n" << buffer << "\n-- END REQUEST --\n\n";
-        std::cout << "-- BEGIN RESPONSE --\n" << response << "\n-- END RESPONSE --\n\n";
-
         write(accepted_con, response.c_str(), response.size());
         close(accepted_con);
     }
+}
+
+template <typename SocketT>
+auto Server<SocketT>::route(std::string url, Callback callback) -> void
+{
+    router.add(url, callback);
 }
 
 #endif // SERVER_H

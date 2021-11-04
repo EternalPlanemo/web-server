@@ -20,7 +20,6 @@ private:
 
 HttpResponse::HttpResponse(const std::string& body)
 {
-
     header = QString("HTTP/1.1 200 OK\r\n"
              "Server: geo/1.0.0\r\n"
              "Date: %1\r\n"
